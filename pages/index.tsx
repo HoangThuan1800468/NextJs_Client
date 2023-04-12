@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { addProduct, fetchProduct } from "../store/productSlice";
+import { addProduct } from "../store/Products/productSlice";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { addUserAuth } from "../store/authSlice";
+import { fetchProduct } from "../store/Products/productThunk";
 
 
 const schema = Yup.object().shape({
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
             Product Name: {product.productname}
             <li>Image: {product.image}</li>
             <li>Price: {product.price}</li>
-            <li>Tag: {product.tag}</li>
+            <li>Tag: {JSON.stringify( product.tag , null, 2)}</li>
           </ul>
         ))}
       </ul>

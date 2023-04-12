@@ -1,10 +1,10 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { addUserAuth } from "../../store/authSlice";
+import { addUserAuth } from "../../store/Auth/authSlice";
 import axios from "axios";
 import router from "next/router";
 

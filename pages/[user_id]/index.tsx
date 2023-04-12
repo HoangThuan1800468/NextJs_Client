@@ -4,10 +4,9 @@ import { AppDispatch, RootState } from "../../store/store";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { addUserAuth } from "../../store/authSlice";
-import axios from "axios";
-import router, { useRouter } from "next/router";
-import { addUser, fetchUser, removeUser } from "../../store/userSlice";
+import { useRouter } from "next/router";
+import { removeUser } from "../../store/User/userSlice";
+import { fetchUser } from "../../store/User/userThunk";
 
 const schema = Yup.object().shape({
   username: Yup.string().required(),
@@ -77,9 +76,9 @@ export default function UserPage() {
         onClick={() => {
           try{
             const res = dispatch(fetchUser({userid,accessToken}));
-          console.log("res", res);
-          res.then((data) => console.log(data))
-              .catch((err) => console.log(err));
+            console.log("res", res);
+            res.then((data) => console.log(data))
+                .catch((err) => console.log(err));
           
           }catch{
             window.alert(["You ned relogin!"]);
