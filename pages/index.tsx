@@ -1,9 +1,13 @@
 import type { NextPage } from "next";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { AppDispatch, RootState } from "../store/store";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { addProduct, fetchProduct } from "../store/productSlice";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { addUserAuth } from "../store/authSlice";
+
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
@@ -11,10 +15,23 @@ const schema = Yup.object().shape({
 });
 
 const Home: NextPage = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const products = useSelector((state: RootState) => state.product);
-  const dispatch = useDispatch();
-  const res = dispatch(fetchProduct());
-          console.log("res", res);
+
+
+  
+  const [accesstoken,setaccesstoken]=useState({});
+  const [username,setusername]=useState({});
+  const [id_user,setid_user]=useState({});
+
+  useEffect(() => {;
+    const a:any = localStorage.getItem("accesstoken");
+    setaccesstoken(a);
+    const b:any = localStorage.getItem("username");
+    setusername(b);
+    const c:any = localStorage.getItem("id_user");
+    setid_user(c);
+  }, [])
 
   // ===================================
   const formik = useFormik({
@@ -29,9 +46,7 @@ const Home: NextPage = () => {
     // Handle form submission
     onSubmit: async ({ name, id }) => {
       // Make a request to your backend to store the data
-      console.log({ name, id });
       const action = addProduct(values);
-      console.log({ action });
       dispatch(action);
     },
   });
@@ -39,27 +54,47 @@ const Home: NextPage = () => {
   // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
    // ===================================
+   
   return (
     <>
     <div>
       <div>
-      <div>Home page</div>
+        <div>Home page</div>
+        <Link href={accesstoken?`/${id_user}`:"/login"}>{accesstoken?"user: "+username:"login"}</Link>
+      </div>
       <hr/>
       <span>
         {/* {products.map(product => (
         <div>{product.name} and id: {product.id}</div>
         ))} */}
       </span>
+      <h1>Product - {products.loading && "loading..."}</h1>
+      <button
+        onClick={() => {
+          const res = dispatch(fetchProduct());
+          console.log("res", res);
+          res
+            .then((data) => console.log(data))
+            .catch((err) => console.log(err));
+        }}
+      >
+        List Product:
+      </button>
       <ul>
-        {products.products.map((el, i) => (
-          <li key={i}>{JSON.stringify(el)}</li>
+        {products.products.map(product => (
+          <ul key={product.id} >
+            Product Name: {product.productname}
+            <li>Image: {product.image}</li>
+            <li>Price: {product.price}</li>
+            <li>Tag: {product.tag}</li>
+          </ul>
         ))}
       </ul>
       <hr/>
       <div>Form product</div>
         <form onSubmit={handleSubmit} method="POST">
-          <div>
-            <label htmlFor="name">Name Product</label>
+          <div className="label_text">
+            <label htmlFor="name" >Name Product: </label>
             <input
               type="text"
               name="name"
@@ -70,8 +105,8 @@ const Home: NextPage = () => {
             {errors.name && touched.name && <span>{errors.name}</span>}
           </div>
 
-          <div>
-            <label htmlFor="id">ID Product</label>
+          <div className="label_text">
+            <label htmlFor="id" >ID Product: </label>
             <input
               type="text"
               name="id"
@@ -87,7 +122,6 @@ const Home: NextPage = () => {
           <button type="submit">Submit</button>
         </form>
       </div>
-    </div>
     </>
   );
 };

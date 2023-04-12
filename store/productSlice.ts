@@ -16,8 +16,7 @@ const initialState = {
 export const fetchProduct = createAsyncThunk(
   'products/fetchProduct',
   async (thunkAPI) => {
-    const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
-    // const response = await axios.get("http://localhost:5000/product/getAllProducts");
+    const response = await axios.get("http://localhost:5000/product/getAllProducts");
     return response.data as productData[];
   }
 )
@@ -26,7 +25,7 @@ export const productSlice = createSlice({
   initialState,
   reducers: {
     addProduct: (state, action) => {
-      state.products.push(action.payload)
+      state.products.push(action.payload);
     },
     // removeProduct: (state,action) => {
     //   const removeProductId = action.payload;
@@ -52,6 +51,6 @@ export const productSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { addProduct, updateProduct } = productSlice.actions
-
-export default productSlice.reducer
+const {reducer,actions} = productSlice;
+export const {addProduct} = actions;
+export default reducer;
