@@ -20,7 +20,10 @@ li{
 }
 .label_text{
   display: flex;
-  width: 300px;
+  width: 360px;
   justify-content:space-between ;
   flex-direction: row;
+}
+.label_text input{
+  width: 230px;
 }

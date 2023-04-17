@@ -4,18 +4,20 @@ import { AppDispatch } from "../../store/store";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { addUserAuth } from "../../store/Auth/authSlice";
-import axios from "axios";
 import router from "next/router";
+import { login, setLogin } from "../../store/User/userService";
+import { changeUser } from "../../store/User/userSlice";
+import { fetchLoginUser, fetchProductsOfUser, fetchUser } from "../../store/User/userThunk";
 
-
+// =============================================
 const schema = Yup.object().shape({
   username: Yup.string().required(),
   password: Yup.string().required(),
 });
-
+// =============================================
 export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
+// =============================================
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -23,47 +25,28 @@ export default function LoginPage() {
     },
     validationSchema: schema,
     onSubmit: async ({ username, password }) => {
-      console.log({ username, password });
-      try {
-        const res = await axios.post(
-          "http://localhost:5000/auth/login",
-          {
-            "username":username,
-            "password":password,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        );
-        if(!res.data.access_token){
-          window.alert(["Username or password not in db"]);
-        }else{
-          console.log(res.data.id_user)
-          window.alert(["login success!"]);
-          const data = {
-            username:username,
-            accesstoken:res.data.access_token
-          }
-          const action = addUserAuth(data);
-          console.log({ action });
-          dispatch(action);
-          if (typeof window !== 'undefined') {
-            localStorage.setItem("username", username);
-            localStorage.setItem("id_user", res.data.id_user);
-            localStorage.setItem("accesstoken", res.data.access_token);
-          }
+      try{
+        const res = await login(username,password);
+        if(res.access_token){
+          setLogin(res.id_user,username,res.access_token);
+          const userid:string = res.id_user;
+          const accessToken:string = res.access_token;
+          await dispatch(fetchUser({accessToken,userid}));
+          await dispatch(fetchProductsOfUser({accessToken,userid}));
+          window.alert([`Wellcome user: ${username}`]);
           router.push("/")
+        }else{
+          window.alert([`Wrong username or password`]);
         }
-      } catch (e) {
-        window.alert(["Username or password not in db"]);
+      }catch{
+        window.alert([`Wrong username or password`]);
       }
+      
     },
   });
-
-  // Destructure the formik object
   const { errors, touched, values, handleChange, handleSubmit } = formik;
+// =============================================
+
   return (     
     <>
     <div>
@@ -71,7 +54,7 @@ export default function LoginPage() {
         <Link href={"/"}>Home</Link>
         <hr/>
     </div>
-    <div>Form login</div>
+    <div>Form Login</div>
         <form onSubmit={handleSubmit} method="POST">
           <div className="label_text">
             <label htmlFor="name">User Name</label>
@@ -96,11 +79,9 @@ export default function LoginPage() {
             />
             {errors.password && touched.password && <span>{errors.password}</span>}
           </div>
-
-          
-
           <button type="submit">Login</button>
         </form>
+        <Link href={"/login/register"}>Don't have account? Click here!</Link>
     </>
   );
 }

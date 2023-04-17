@@ -1,17 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { fetchProduct } from './productThunk';
+import { fetchOneProduct, fetchProduct } from './productThunk';
 
 export interface ProductState {
   products:Array<any>,
-  loading:boolean
+  loading:boolean,
+  product:{}
 }
 
 
 const initialState = {
   products:[],
-  loading:false
+  loading:false,
+  product:{}
 }as ProductState;
 
 
@@ -22,10 +24,6 @@ export const productSlice = createSlice({
     addProduct: (state, action) => {
       state.products.push(action.payload);
     },
-    // removeProduct: (state,action) => {
-    //   const removeProductId = action.payload;
-    //   return state.products.filter(product => product.id !== removeProductId);
-    // },
     updateProduct: (state, action) => {
       const newProduct = action.payload;
       const productIndex = state.products.findIndex(product =>product.id === newProduct.id);
@@ -35,13 +33,24 @@ export const productSlice = createSlice({
     },
   },
   extraReducers: (builder) =>{
-    builder.addCase(fetchProduct.pending,(state)=>{
-      state.loading=true;
-    });
-    builder.addCase(fetchProduct.fulfilled,(state,{payload}) => {
-      state.loading = false;
-      state.products = payload;
-    })
+    // get all product
+    builder
+      .addCase(fetchProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.products = payload;
+      })
+    // get one product
+    builder
+      .addCase(fetchOneProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchOneProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.product = payload;
+      })
   }
 })
 
