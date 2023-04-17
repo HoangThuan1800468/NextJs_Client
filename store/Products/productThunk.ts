@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getAllProduct, getOneProduct, updateStatusProduct } from "./productService";
+import { CreateNewProduct, getAllProduct, getOneProduct, updateStatusProduct } from "./productService";
 
 type productData = any;
 // get all product
@@ -30,5 +30,29 @@ export const fetchUpdateStatusProduct = createAsyncThunk(
   async ({idProduct,accessToken,status}:UpdateProductInterface,thunkAPI) => {
     const response = await updateStatusProduct(idProduct,accessToken,status);
     return response;
+  }
+)
+// productname:string,owner:string,price:number,saleprice:number,image:string,accessToken:string
+// update status product
+export interface CreateNewProductInterface{
+  productname:string;
+  owner:string;
+  price:number;
+  saleprice:number;
+  image:string;
+  accessToken:string
+}
+export const fetchCreateNewProduct = createAsyncThunk(
+  'products/fetchCreateNewProduct',
+  async ({productname,owner,price,saleprice,image,accessToken}:CreateNewProductInterface,thunkAPI) => {
+    try{
+      const response = await CreateNewProduct(productname,owner,price,saleprice,image,accessToken);
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+  }
+    
   }
 )

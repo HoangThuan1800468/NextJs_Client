@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchOneProduct, fetchProduct, fetchUpdateStatusProduct } from './productThunk';
+import { fetchCreateNewProduct, fetchOneProduct, fetchProduct, fetchUpdateStatusProduct } from './productThunk';
 
 export interface ProductState {
   products:Array<any>,
@@ -55,6 +55,15 @@ export const productSlice = createSlice({
         state.loading=true;
       })
       .addCase(fetchUpdateStatusProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.product = payload;
+      })
+    // Create new product
+    builder
+      .addCase(fetchCreateNewProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchCreateNewProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.product = payload;
       })

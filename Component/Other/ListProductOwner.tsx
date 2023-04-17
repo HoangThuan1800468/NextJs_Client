@@ -11,9 +11,11 @@ function ListProductOwner (props:any){
     const accessToken:any = props.accesstoken;
 
     const [statusProduct,setstatusProduct]=useState({});
-    
+    const [showEditProduct,setshowEditProduct]=useState({});
+
     useEffect(() => {;
       setstatusProduct(props.data.status);
+      setshowEditProduct(false);
     }, []);
 
     async function handleChangeStatusTrue(){
@@ -32,6 +34,9 @@ function ListProductOwner (props:any){
     function handleSetStateProduct(){
       dispatch(fetchOneProduct(idProduct))
     }
+    function handleShowEditProduct(){
+      setshowEditProduct(true);
+    }
     return(
         <>
         <ul key={props.data._id} >
@@ -48,7 +53,12 @@ function ListProductOwner (props:any){
               :
               <button onClick={handleChangeStatusTrue}>Sale now</button>
             }
-            <button>Edit</button>
+            <button onClick={handleShowEditProduct}>Edit</button>
+            {showEditProduct?
+            <div>
+              <h3>"show edit"</h3>
+            </div>
+            :""}
             <button onClick={handleDeleteProduct}>Delete</button>
             <hr/>
           </ul>

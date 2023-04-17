@@ -4,35 +4,21 @@ import { AppDispatch, RootState } from "../../../store/store";
 import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import router from "next/router";
 import ListProductOwner from "../../../Component/Other/ListProductOwner";
 import { fetchProductsOfUser, fetchUser } from "../../../store/User/userThunk";
+import { fetchCreateNewProduct } from "../../../store/Products/productThunk";
 // =============================================
 const schema = Yup.object().shape({
   productname: Yup.string().required(),
   price: Yup.number().required(),
   saleprice: Yup.number().required(),
-  image:Yup.string().required(),
+  img:Yup.string().required(),
 });
 // =============================================
 export default function ProductOwnerPage() {
     const dispatch = useDispatch<AppDispatch>();
-// =============================================
-const formik = useFormik({
-  initialValues: {
-    productname: "",
-    price: 0,
-    saleprice:0,
-    image:""
-  },
-  validationSchema: schema,
-  onSubmit: async ({ productname, price,saleprice,image }) => {
-    console.log(values)
-    const a:any = image.split("\\");
-    console.log(a[2])
-  },
-});
-const { errors, touched, values, handleChange, handleSubmit } = formik;
-// =============================================
+
     const [accessToken,setaccessToken]=useState({});
     const [showCreateProduct,setshowCreateProduct]=useState({});
     useEffect(() => {
@@ -48,7 +34,33 @@ const { errors, touched, values, handleChange, handleSubmit } = formik;
 // 
     const productsOwner = useSelector((state:RootState) => state.user.products);
     const user:any = useSelector((state:RootState)=>state.user);
-    
+    // =============================================
+      const formik = useFormik({
+        initialValues: {
+          productname: "",
+          price: 0,
+          saleprice:0,
+          img:""
+        },
+        validationSchema: schema,
+        onSubmit: async ({ productname, price,saleprice,img }) => {
+          const imageArr:any = img.split("\\");
+          
+          const image:any = imageArr[2];
+          const accessToken:any = localStorage.getItem("accesstoken");
+          const owner:any = localStorage.getItem("id_user");
+          try{
+            const res:any = dispatch(fetchCreateNewProduct({productname,owner,price,saleprice,image,accessToken}));
+            window.alert([`Success!`]);
+            router.push(`/${owner}`)
+          }catch{
+            window.alert([`Faile!`]);
+          }
+          
+        },
+      });
+      const { errors, touched, values, handleChange, handleSubmit } = formik;
+    // =============================================
   async function showCreateNewProduct() {
     setshowCreateProduct(true);
   }
@@ -62,60 +74,60 @@ const { errors, touched, values, handleChange, handleSubmit } = formik;
         <hr/>
         <button onClick={showCreateNewProduct}>Create new Product</button>
         {showCreateProduct?
-        <>
-        <form onSubmit={handleSubmit} method="POST">
-          <div className="label_text">
-            <label htmlFor="productname">Product Name</label>
-            <input
-              type="text"
-              name="productname"
-              value={values.productname}
-              onChange={handleChange}
-              id="productname"
-            />
-            {errors.productname && touched.productname && <span>{errors.productname}</span>}
-          </div>
+          <>
+          <form onSubmit={handleSubmit} method="POST">
+            <div className="label_text">
+              <label htmlFor="productname">Product Name</label>
+              <input
+                type="text"
+                name="productname"
+                value={values.productname}
+                onChange={handleChange}
+                id="productname"
+              />
+              {errors.productname && touched.productname && <span>{errors.productname}</span>}
+            </div>
 
-          <div className="label_text">
-            <label htmlFor="image">Image</label>
-            <input
-              type="file"
-              name="image"
-              value={values.image}
-              onChange={handleChange}
-              id="image"
-            />
-            {errors.image && touched.image && <span>{errors.image}</span>}
-          </div>
+            <div className="label_text">
+              <label htmlFor="img">Image</label>
+              <input
+                type="file"
+                name="img"
+                value={values.img}
+                onChange={handleChange}
+                id="img"
+              />
+              {errors.img && touched.img && <span>{errors.img}</span>}
+            </div>
 
-          <div className="label_text">
-            <label htmlFor="price">Price</label>
-            <input
-              type="number"
-              name="price"
-              value={values.price}
-              onChange={handleChange}
-              id="price"
-            />
-            {errors.price && touched.price && <span>{errors.price}</span>}
-          </div>
+            <div className="label_text">
+              <label htmlFor="price">Price</label>
+              <input
+                type="number"
+                name="price"
+                value={values.price}
+                onChange={handleChange}
+                id="price"
+              />
+              {errors.price && touched.price && <span>{errors.price}</span>}
+            </div>
 
-          <div className="label_text">
-            <label htmlFor="saleprice">Sale Price</label>
-            <input
-              type="number"
-              name="saleprice"
-              value={values.saleprice}
-              onChange={handleChange}
-              id="saleprice"
-            />
-            {errors.saleprice && touched.saleprice && <span>{errors.saleprice}</span>}
-          </div>
-          <button type="submit">Create</button>
-        </form>
-        </>
-        :
-        ""
+            <div className="label_text">
+              <label htmlFor="saleprice">Sale Price</label>
+              <input
+                type="number"
+                name="saleprice"
+                value={values.saleprice}
+                onChange={handleChange}
+                id="saleprice"
+              />
+              {errors.saleprice && touched.saleprice && <span>{errors.saleprice}</span>}
+            </div>
+            <button type="submit">Create</button>
+          </form>
+          </>
+          :
+          ""
         }
         <h1>List Products Owner:</h1>
         <ul>

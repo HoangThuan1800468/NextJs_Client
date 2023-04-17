@@ -25,3 +25,22 @@ export const updateStatusProduct =async (idProduct:string,accessToken:string,sta
   })
   return res;
 }
+// create new product 
+export const CreateNewProduct = 
+  async (productname:string,owner:string,price:number,saleprice:number,image:string,accessToken:string) => {
+    const res = await axios.post(`http://localhost:5000/product/createProduct`,
+    {
+      "productname":productname,
+      "owner":owner,
+      "price":price,
+      "saleprice":saleprice,
+      "image":image,
+      "accessToken":accessToken
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+  })
+  return res;
+}

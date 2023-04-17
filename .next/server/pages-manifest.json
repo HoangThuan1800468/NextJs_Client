@@ -2,8 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/[user_id]": "pages/[user_id].js",
-  "/[user_id]/productOwner": "pages/[user_id]/productOwner.js",
-  "/product/[idProduct]": "pages/product/[idProduct].js"
+  "/[user_id]/productOwner": "pages/[user_id]/productOwner.js"
 }
