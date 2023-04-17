@@ -23,7 +23,7 @@ function ListProduct (props:any){
             </button>
             <li>Product Price: {props.data.price} $</li>
             <li>Product Sale: {props.data.saleprice} $</li>
-            {props.data.status?<button>Buy now</button>:<button onClick={handleFavorite}>Favourite</button>}
+            {props.data.status?<button>Buy now</button>:<button onClick={handleFavorite}>Not open for sale</button>}
             <hr/>
           </ul>
         </>

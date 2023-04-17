@@ -28,7 +28,7 @@ function InforProductOwner (props:any){
             <h2>Product Image: {dataProduct.image}</h2>
             <h3>Product price: {dataProduct.price}$</h3>
             <h3>Product sale: {dataProduct.saleprice}$</h3>
-            {dataProduct.status?<button>Buy now</button>:<button>Favourite</button>}
+            <h3>Status: {dataProduct.status?"Saling":"Stop sale"}</h3>
         </div>
         </>
     );

@@ -1,14 +1,33 @@
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchOneProduct } from "../../store/Products/productThunk";
+import { fetchOneProduct, fetchUpdateStatusProduct } from "../../store/Products/productThunk";
+import { useEffect, useState } from "react";
 
 function ListProductOwner (props:any){
     const dispatch = useDispatch<AppDispatch>();
     const idProduct:any = props.data._id;
     const user:any = props.user;
-    function handleFavorite(){
-        window.alert("Cho vui thôi chứ cái này không có làm!!!")
+    const accessToken:any = props.accesstoken;
+
+    const [statusProduct,setstatusProduct]=useState({});
+    
+    useEffect(() => {;
+      setstatusProduct(props.data.status);
+    }, []);
+
+    async function handleChangeStatusTrue(){
+      const status:boolean = true;
+      const res:any = await dispatch(fetchUpdateStatusProduct({idProduct,accessToken,status}));
+      setstatusProduct(true);
+    }
+    async function handleChangeStatusFalse(){
+      const status:boolean = false;
+      const res:any = await dispatch(fetchUpdateStatusProduct({idProduct,accessToken,status}));
+      setstatusProduct(false);
+    }
+    async function handleDeleteProduct(){
+      window.alert([`DELETE`]);
     }
     function handleSetStateProduct(){
       dispatch(fetchOneProduct(idProduct))
@@ -23,9 +42,14 @@ function ListProductOwner (props:any){
             </button>
             <li>Product Price: {props.data.price} $</li>
             <li>Product Sale: {props.data.saleprice} $</li>
-            {props.data.status?<button>Buy now</button>:<button onClick={handleFavorite}>Favourite</button>}
+            {
+              statusProduct?
+              <button onClick={handleChangeStatusFalse}>Stop sale</button>
+              :
+              <button onClick={handleChangeStatusTrue}>Sale now</button>
+            }
             <button>Edit</button>
-            <button>Delete</button>
+            <button onClick={handleDeleteProduct}>Delete</button>
             <hr/>
           </ul>
         </>

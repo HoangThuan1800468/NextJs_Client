@@ -1,7 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
-import axios from 'axios'
-import { fetchOneProduct, fetchProduct } from './productThunk';
+import { createSlice } from '@reduxjs/toolkit'
+import { fetchOneProduct, fetchProduct, fetchUpdateStatusProduct } from './productThunk';
 
 export interface ProductState {
   products:Array<any>,
@@ -48,6 +46,15 @@ export const productSlice = createSlice({
         state.loading=true;
       })
       .addCase(fetchOneProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.product = payload;
+      });
+    // update status product
+    builder
+      .addCase(fetchUpdateStatusProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchUpdateStatusProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.product = payload;
       })
