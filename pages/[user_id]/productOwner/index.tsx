@@ -64,6 +64,9 @@ export default function ProductOwnerPage() {
   async function showCreateNewProduct() {
     setshowCreateProduct(true);
   }
+  async function EndshowCreateNewProduct() {
+    setshowCreateProduct(false);
+  }
   return (     
     <>
     <div>
@@ -72,7 +75,12 @@ export default function ProductOwnerPage() {
         <div>Product Owner page</div>
         <Link href={"/"}>Home</Link>
         <hr/>
-        <button onClick={showCreateNewProduct}>Create new Product</button>
+        {showCreateProduct?
+          <button onClick={EndshowCreateNewProduct}>Cancle create new product</button>
+        :
+          <button onClick={showCreateNewProduct}>Create new Product</button>
+        }
+        
         {showCreateProduct?
           <>
           <form onSubmit={handleSubmit} method="POST">

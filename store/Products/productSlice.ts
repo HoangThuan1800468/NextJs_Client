@@ -1,17 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchCreateNewProduct, fetchOneProduct, fetchProduct, fetchUpdateStatusProduct } from './productThunk';
+import { fetchCreateNewProduct, fetchCreateOrder, fetchDeleteOrder, fetchHandleOrder, fetchOneProduct, fetchProduct, fetchUpdateInforProduct, fetchUpdateStatusProduct } from './productThunk';
 
 export interface ProductState {
   products:Array<any>,
   loading:boolean,
-  product:{}
+  product:{},
+  order:{}
 }
 
 
 const initialState = {
   products:[],
   loading:false,
-  product:{}
+  product:{},
+  order:{}
 }as ProductState;
 
 
@@ -39,7 +41,7 @@ export const productSlice = createSlice({
       .addCase(fetchProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.products = payload;
-      })
+      });
     // get one product
     builder
       .addCase(fetchOneProduct.pending,(state)=>{
@@ -57,7 +59,16 @@ export const productSlice = createSlice({
       .addCase(fetchUpdateStatusProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.product = payload;
+      });
+    // update infor product
+    builder
+      .addCase(fetchUpdateInforProduct.pending,(state)=>{
+        state.loading=true;
       })
+      .addCase(fetchUpdateInforProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.product = payload;
+      });
     // Create new product
     builder
       .addCase(fetchCreateNewProduct.pending,(state)=>{
@@ -66,7 +77,34 @@ export const productSlice = createSlice({
       .addCase(fetchCreateNewProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.product = payload;
+      });
+    // Create new order
+    builder
+      .addCase(fetchCreateOrder.pending,(state)=>{
+        state.loading=true;
       })
+      .addCase(fetchCreateOrder.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.order = payload.data;
+      });
+    // Handle order
+    builder
+      .addCase(fetchHandleOrder.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchHandleOrder.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.order = payload.data;
+      });
+    // Handle order
+    builder
+      .addCase(fetchDeleteOrder.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchDeleteOrder.fulfilled,(state) => {
+        state.loading = false;
+        state.order = {};
+      });
   }
 })
 

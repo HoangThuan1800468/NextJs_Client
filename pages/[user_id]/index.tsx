@@ -20,7 +20,9 @@ export default function UserPage() {
     const userid:any = localStorage.getItem("id_user");
 
     dispatch(fetchProductsOfUser({accessToken,userid}));
-    dispatch(fetchUser({userid,accessToken}));
+
+      const rs = dispatch(fetchUser({userid,accessToken}));
+    
   }, []);
   // 
   

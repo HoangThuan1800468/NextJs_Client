@@ -12,8 +12,16 @@ export interface UserGetInfor {
 
 export const fetchUser = createAsyncThunk('user/fetchUser',
   async ({userid,accessToken}:UserGetInfor,thunkAPI) => {
-    const response = await getInforUser(userid,accessToken);
-    return response as userData[];
+    try{
+      const response = await getInforUser(userid,accessToken);
+      return response as userData[];
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`Token has expired, you need to login again!`]);
+      router.push("/login");
+      return err;
+  }
+    
   }
 )
 

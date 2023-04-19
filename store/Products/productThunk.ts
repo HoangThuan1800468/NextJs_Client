@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { CreateNewProduct, getAllProduct, getOneProduct, updateStatusProduct } from "./productService";
+import { CreateNewOrder, CreateNewProduct, DeleteOrder, HandleOrder, getAllProduct, getOneProduct, updateInforProduct, updateStatusProduct } from "./productService";
 
 type productData = any;
 // get all product
@@ -32,7 +32,6 @@ export const fetchUpdateStatusProduct = createAsyncThunk(
     return response;
   }
 )
-// productname:string,owner:string,price:number,saleprice:number,image:string,accessToken:string
 // update status product
 export interface CreateNewProductInterface{
   productname:string;
@@ -53,6 +52,87 @@ export const fetchCreateNewProduct = createAsyncThunk(
       window.alert([`${err.payload}`]);
       return err;
   }
-    
+  }
+)
+// update product
+export interface UpdateInforProductInterface{
+  idProduct:string;
+  accessToken:string;
+  productname:string;
+  image:string;
+  price:number;
+  saleprice:number;
+  tag:[];
+}
+export const fetchUpdateInforProduct = createAsyncThunk(
+  'products/fetchUpdateInforProduct',
+  async ({idProduct,accessToken,productname,image,price,saleprice,tag}:UpdateInforProductInterface,thunkAPI) => {
+    try{
+      const response = await updateInforProduct(idProduct,accessToken,productname,image,price,saleprice,tag);
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+  }
+  }
+)
+// create order
+export interface CreateOrderInterface{
+  idSeller:string;
+  idBuyer:string;
+  idProduct:string;
+  price:number;
+  accessToken:string;
+}
+export const fetchCreateOrder = createAsyncThunk(
+  'products/fetchCreateOrder',
+  async ({idSeller,idBuyer,idProduct,price,accessToken}:CreateOrderInterface,thunkAPI) => {
+    try{
+      const response = await CreateNewOrder(idSeller,idBuyer,idProduct,price,accessToken);
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+  }
+  }
+)
+// handle order
+export interface HandleOrderInterface{
+  accessToken:string;
+  walletPassword:string;
+  idOrder:string;
+}
+export const fetchHandleOrder = createAsyncThunk(
+  'products/fetchHandleOrder',
+  async ({accessToken,walletPassword,idOrder}:HandleOrderInterface,thunkAPI) => {
+    try{
+      const response = await HandleOrder(accessToken,walletPassword,idOrder);
+      if(response.data !== `Order Id: ${idOrder}, successful transaction`){
+        window.alert([`${response.data}`]);
+        const rs = await DeleteOrder(idOrder);
+      }
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      const response = await DeleteOrder(idOrder);
+      window.alert([`${err.payload}`]);
+      return err;
+    }
+  }
+)
+// delete order
+export const fetchDeleteOrder = createAsyncThunk(
+  'products/fetchDeleteOrder',
+  async (idOrder:string,thunkAPI) => {
+    try{
+      const response = await DeleteOrder(idOrder);
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+    }
   }
 )
