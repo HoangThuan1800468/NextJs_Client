@@ -2,8 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/user/[user_id]/order/[idOrder]": "pages/user/[user_id]/order/[idOrder].js",
   "/user/[user_id]/productOwner": "pages/user/[user_id]/productOwner.js",
-  "/": "pages/index.js",
   "/user/[user_id]": "pages/user/[user_id].js",
-  "/user/[user_id]/order/[idOrder]": "pages/user/[user_id]/order/[idOrder].js"
+  "/user/[user_id]/productOwner/[idProductOfOwner]": "pages/user/[user_id]/productOwner/[idProductOfOwner].js",
+  "/user/[user_id]/walletUser": "pages/user/[user_id]/walletUser.js"
 }
