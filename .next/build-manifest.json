@@ -35,10 +35,15 @@
       "static/chunks/main.js",
       "static/chunks/pages/user/[user_id].js"
     ],
-    "/user/[user_id]/walletUser": [
+    "/user/[user_id]/order/[idOrder]": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/user/[user_id]/walletUser.js"
+      "static/chunks/pages/user/[user_id]/order/[idOrder].js"
+    ],
+    "/user/[user_id]/productOwner": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/user/[user_id]/productOwner.js"
     ]
   },
   "ampFirstPages": []
