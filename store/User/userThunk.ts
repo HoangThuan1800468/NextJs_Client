@@ -18,6 +18,7 @@ export const fetchUser = createAsyncThunk('user/fetchUser',
     }catch (error: any) {
       const err = thunkAPI.rejectWithValue(error.response.data.message);
       window.alert([`Token has expired, you need to login again!`]);
+      localStorage.clear();
       router.push("/login");
       return err;
   }

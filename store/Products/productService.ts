@@ -5,6 +5,16 @@ export const getAllProduct = async ()=>{
     const res = await axios.get("http://localhost:5000/product/getAllProducts");
     return res.data;
   }
+// search name product
+export const searchProduct = async (tag:string)=>{
+  const res = await axios.get(`http://localhost:5000/product/searchProducts/${tag}`);
+  return res.data;
+}
+// search tag product
+export const searchTagProduct = async (string:string)=>{
+  const res = await axios.get(`http://localhost:5000/product/getProductsWithTags/${string}`);
+  return res.data;
+}
 // get one product
 export const getOneProduct = async (idProduct:string)=>{
     const res = await axios.get(`http://localhost:5000/product/getOneProduct/${idProduct}`);
@@ -107,5 +117,11 @@ export const HandleOrder =
 export const DeleteOrder = 
   async (idOrder:string) => {
     const res = await axios.delete(`http://localhost:5000/tradingOrder/deleteOrder/${idOrder}`);
+  return res;
+}
+// get one order 
+export const GetOneOrder = 
+  async (idOrder:string) => {
+    const res = await axios.get(`http://localhost:5000/tradingOrder/getOneOrder/${idOrder}`);
   return res;
 }

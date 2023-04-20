@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { CreateNewOrder, CreateNewProduct, DeleteOrder, HandleOrder, getAllProduct, getOneProduct, updateInforProduct, updateStatusProduct } from "./productService";
+import { CreateNewOrder, CreateNewProduct, DeleteOrder, GetOneOrder, HandleOrder, getAllProduct, getOneProduct, searchProduct, searchTagProduct, updateInforProduct, updateStatusProduct } from "./productService";
 
 type productData = any;
 // get all product
@@ -9,6 +9,34 @@ export const fetchProduct = createAsyncThunk(
       const response = await getAllProduct();
       return response as productData[];
     }
+)
+// search product
+export const fetchSearchProduct = createAsyncThunk(
+  'products/fetchSearchProduct',
+  async (string:string,thunkAPI) => {
+    try{
+      const response = await searchProduct(string);
+      return response as productData[];
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+    }
+  }
+)
+// search tag product
+export const fetchSearchTagProduct = createAsyncThunk(
+  'products/fetchSearchTagProduct',
+  async (tag:string,thunkAPI) => {
+    try{
+      const response = await searchTagProduct(tag);
+      return response as productData[];
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
+      window.alert([`${err.payload}`]);
+      return err;
+    }
+  }
 )
 // get one product
 
@@ -132,6 +160,19 @@ export const fetchDeleteOrder = createAsyncThunk(
     }catch (error: any) {
       const err = thunkAPI.rejectWithValue(error.response.data.message);
       window.alert([`${err.payload}`]);
+      return err;
+    }
+  }
+)
+// get one order
+export const fetchGetOneOrder = createAsyncThunk(
+  'products/fetchGetOneOrder',
+  async (idOrder:string,thunkAPI) => {
+    try{
+      const response = await GetOneOrder(idOrder);
+      return response;
+    }catch (error: any) {
+      const err = thunkAPI.rejectWithValue(error.response.data.message);
       return err;
     }
   }

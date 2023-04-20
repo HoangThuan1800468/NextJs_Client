@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchCreateNewProduct, fetchCreateOrder, fetchDeleteOrder, fetchHandleOrder, fetchOneProduct, fetchProduct, fetchUpdateInforProduct, fetchUpdateStatusProduct } from './productThunk';
+import { fetchCreateNewProduct, fetchCreateOrder, fetchDeleteOrder, fetchGetOneOrder, fetchHandleOrder, fetchOneProduct, fetchProduct, fetchSearchProduct, fetchSearchTagProduct, fetchUpdateInforProduct, fetchUpdateStatusProduct } from './productThunk';
 
 export interface ProductState {
   products:Array<any>,
@@ -39,6 +39,24 @@ export const productSlice = createSlice({
         state.loading=true;
       })
       .addCase(fetchProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.products = payload;
+      });
+    // search product
+    builder
+      .addCase(fetchSearchProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchSearchProduct.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.products = payload;
+      });
+    // search tag product
+    builder
+      .addCase(fetchSearchTagProduct.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchSearchTagProduct.fulfilled,(state,{payload}) => {
         state.loading = false;
         state.products = payload;
       });
@@ -96,7 +114,7 @@ export const productSlice = createSlice({
         state.loading = false;
         state.order = payload.data;
       });
-    // Handle order
+    // Delete order
     builder
       .addCase(fetchDeleteOrder.pending,(state)=>{
         state.loading=true;
@@ -104,6 +122,15 @@ export const productSlice = createSlice({
       .addCase(fetchDeleteOrder.fulfilled,(state) => {
         state.loading = false;
         state.order = {};
+      });
+    // get one order
+    builder
+      .addCase(fetchGetOneOrder.pending,(state)=>{
+        state.loading=true;
+      })
+      .addCase(fetchGetOneOrder.fulfilled,(state,{payload}) => {
+        state.loading = false;
+        state.order = payload.data;
       });
   }
 })

@@ -135,7 +135,7 @@ function ListProductOwner (props:any){
         <>
         <ul key={props.data._id} >
             <button onClick={handleSetStateProduct}>
-              <Link href={`/${user}/productOwner/${props.data._id}`} >
+              <Link href={`/user/${user}/productOwner/${props.data._id}`} >
                 Product Name: {`${productName}`}
               </Link>
             </button>
